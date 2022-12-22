@@ -1,4 +1,4 @@
-const controller = require('../controllers');
+const controller = require('../controllers/user.controller.option2');
 const router = require('express').Router();
 
 // Create a new record

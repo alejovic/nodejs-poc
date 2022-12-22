@@ -17,6 +17,6 @@ module.exports = function (app) {
     // Delete a record
     router.delete('/:id', controller.remove);
 
-    app.use('/api/route-3/clients', router);
+    app.use('/api/option3/clients', router);
 
 };

@@ -1,12 +1,12 @@
-const controller = require('../controllers');
+const controller = require('../controllers/user.controller.option1');
 const router = require('express').Router();
 
-module.exports = () => {
+module.exports.Router = () => {
     // Create a new record
     router.post('/', controller.create);
 
     // Retrieve all Notes
-    router.get('/', controller.findAll)
+    router.get('/', controller.findAll);
 
     // Retrieve a single record by Id
     router.get('/:id', controller.findById);
@@ -16,4 +16,6 @@ module.exports = () => {
 
     // Delete a record
     router.delete('/:id', controller.remove);
-}
+
+    return router;
+};

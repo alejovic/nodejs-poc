@@ -25,15 +25,15 @@ app.get('/', (req, res) => {
 
 // A best practice is to abstract routes into a module that has the job of mapping paths to controller methods.
 // using the api-routes/index.js
-app.use('/api/clients', require('./api-routes/'))
+app.use('/api/clients', require('./api-routes'))
 
-// option #1 /api/route-1/clients
-app.use('/api/route-1/clients', require('./api-routes/routes.option1'))
+// option #1 /api/option1/clients
+app.use('/api/option1/clients', require('./api-routes/routes.option1').Router());
 
-// option #2 /api/route-2/clients
-app.use('/api/route-2/clients', require('./api-routes/routes.option2'));
+// option #2 /api/option2/clients
+app.use('/api/option2/clients', require('./api-routes/routes.option2'));
 
-// option #3 /api/route-3/clients
+// option #3 /api/option3/clients
 require('./api-routes/routes.option3') (app);
 
 module.exports = app;
