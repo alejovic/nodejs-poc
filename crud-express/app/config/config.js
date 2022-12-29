@@ -56,6 +56,14 @@ var config = convict({
       default: '',
       env: 'DB_PASSWORD'
     }
+  },
+  nosql : {
+    mongo_uri: {
+      doc: 'Mongo URI',
+      format: String,
+      default: '',
+      env: 'MONGODB_URI'
+    }
   }
 });
 

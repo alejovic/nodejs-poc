@@ -29,6 +29,9 @@ npm install --save body-parser
 # for connecting to Postgresql
 npm install --save pg
 
+# for connecting to Mongo
+npm install --save mongoose
+
 # UUID
 npm install --save uuid
 

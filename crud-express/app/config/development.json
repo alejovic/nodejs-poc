@@ -6,5 +6,8 @@
     "name": "nodejs",
     "user": "postgres",
     "password": "postgres"
+  },
+  "nosql": {
+    "mongo_uri": "mongodb://localhost:27017/nodejs"
   }
 }
