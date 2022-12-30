@@ -1,4 +1,7 @@
-const mongoose = require("mongoose");
+//const mongoose = require("mongoose");
+
+const mongoose = require('./nosql');
+
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -16,21 +19,28 @@ const userSchema = new Schema({
 const userModel = mongoose.model("User", userSchema);
 
 userSchema.findAll = async() => {
+    console.log('user.mode.nosql.findAll -> start');
     return userModel.find();
 };
 
-userSchema.findById = (id, result) => {
+userSchema.findById = (id) => {
+    console.log('user.mode.nosql.findById -> start');
     return userModel.findById(id);
 }
 
-userSchema.create = (user, result) => {
+userSchema.create = (user) => {
+    console.log('user.mode.nosql.create -> start >>' + user);
     return userModel.create(user);
 }
 
-userSchema.update = (id, user, result) => {
-    return userModel.update(user);
+userSchema.update = (id, user) => {
+    console.log('user.mode.nosql.update -> start >>' + id);
+    return userModel.findByIdAndUpdate(id, user);
 }
 
-userSchema.remove = (id, result) => {
-    return userModel.delete(user);
+userSchema.remove = (id) => {
+    console.log('user.mode.nosql.remove -> start >>' + id);
+    return userModel.delete(id);
 }
+
+module.exports = userSchema;

@@ -9,12 +9,12 @@ const service = require('../models/user.model.nosql');
 
 const findAll = async (req, res) => {
     try {
-        console.log('user.controller.option2.findAll -> start');
+        console.log('user.controller.nosql.findAll -> start');
         const result = await service.findAll();
         res.status(200).json({
             data: result
         });
-        console.log('user.controller.option2.findAll -> end');
+        console.log('user.controller.nosql.findAll -> end');
     } catch (error) {
         console.error(error);
         res.status(500).send(error);
@@ -23,7 +23,7 @@ const findAll = async (req, res) => {
 
 const findById = async (req, res) => {
     try {
-        console.log('user.controller.option2.findById -> start');
+        console.log('user.controller.nosql.findById -> start');
         const id = req.params.id;
         const result = await service.findById(id);
         res.status(200).json({
@@ -37,17 +37,25 @@ const findById = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-        const id = req.params.id;
-        await service.create(id);
+        const user = req.body;
+        const result = await service.create(user);
+        res.status(200).json({
+            status: "success",
+            data: result
+        });
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).json({
+            status: "error",
+            error: error.message }
+        );
     }
 };
 
 const update = async (req, res) => {
     try {
         const id = req.params.id;
-        await service.update(id);
+        const user = req.body;
+        await service.update(id, user);
     } catch (error) {
         res.status(500).send(error);
     }
@@ -56,7 +64,8 @@ const update = async (req, res) => {
 const remove = async (req, res) => {
     try {
         const id = req.params.id;
-        await service.remove(id);
+        const user = req.body;
+        await service.remove(id,user);
     } catch (error) {
         res.status(500).send(error);
     }

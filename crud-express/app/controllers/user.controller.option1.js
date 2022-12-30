@@ -18,7 +18,7 @@ const client = new Client({
 
 client.connect(function (err) {
     if (err) throw err
-    console.log('You are now connected with postgres database...')
+    console.log('bad practice --> You are now connected with postgres database...')
 })
 
 exports.findAll = (req, res) => {

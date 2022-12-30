@@ -37,10 +37,17 @@ const findById = async (req, res) => {
 
 const create = async (req, res) => {
     try {
-        const id = req.params.id;
-        await service.create(id);
+        const user = req.body;
+        const result = await service.create(user);
+        res.status(200).json({
+            status: "success",
+            data: result
+        });
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).json({
+            status: "error",
+            error: error.message }
+        );
     }
 };
 

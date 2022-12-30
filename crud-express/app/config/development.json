@@ -8,6 +8,6 @@
     "password": "postgres"
   },
   "nosql": {
-    "mongo_uri": "mongodb://localhost:27017/nodejs"
+    "mongo_uri": "mongodb://localhost:57017/nodejs"
   }
 }

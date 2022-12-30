@@ -36,7 +36,9 @@ User.findAll = (result) => {
 
 User.findById = (id, result) => {
     console.log('user.controller.option3.findById -> load');
-    let sql = `SELECT * FROM users WHERE id = '${id}'`;
+    let sql = `SELECT *
+               FROM users
+               WHERE id = '${id}'`;
 
     dbAccess.query(sql, (error, data) => {
         if (error) {

@@ -60,13 +60,31 @@ const findById = (id) => {
                 console.debug('user.model.option2.findById -> done.');
             });
     });
-
 };
 
-const create = (req, res) => {
-    console.log('Not supported yet.' + req)
-    res.status(201).json({
-        info: 'Not supported yet'
+const create = (user) => {
+    console.debug('user.model.option2.create -> start.');
+    return new Promise((resolve, reject) => {
+        let sql = 'INSERT INTO users(name, email) VALUES ($1,$2)';
+        console.debug(sql);
+        console.debug(user);
+        dbAccess.query(sql, [user.name, user.email], (error, data) => {
+            if (error) {
+                console.log('error:', error);
+                return reject({
+                    id: uuid.v1(),
+                    status: 'error',
+                    error: error.message,
+                });
+            }
+
+            console.debug('user has been created');
+            // console.debug(data);
+            return resolve({
+                status: 'success',
+                rowCount: data.rowCount,
+            });
+        });
     });
 };
 
