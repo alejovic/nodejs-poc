@@ -37,10 +37,18 @@ const findAll = () => {
 const findById = (id) => {
     console.debug('user.model.option2.findById -> start.');
     return new Promise((resolve, reject) => {
-        let sql = 'SELECT * FROM users WHERE id=' + id;
+        let sql = 'SELECT * FROM users WHERE id=$1';
         console.debug(sql);
-        dbAccess.query(sql)
+        dbAccess.query(sql, [id])
             .then(data => {
+                if(data.rowCount === 0) {
+                    return reject({
+                        id: uuid.v1(),
+                        status: 'error',
+                        error: 'not found',
+                    });
+                }
+
                 return resolve({
                     id: uuid.v1(),
                     status: 'success',
@@ -88,17 +96,71 @@ const create = (user) => {
     });
 };
 
-const update = (req, res) => {
-    console.log('Not supported yet.' + req)
-    res.status(200).json({
-        info: 'Not supported yet'
+const update = (id, user) => {
+    console.log('user.controller.option2.update -> load');
+    return new Promise((resolve, reject) => {
+        let sql = 'UPDATE users SET name=$1, email=$2 where id=$3';
+        console.debug(sql);
+        console.debug(user);
+        dbAccess.query(sql, [user.name, user.email, id], (error, data) => {
+            if (error) {
+                console.log('error:', error);
+                return reject({
+                    id: uuid.v1(),
+                    status: 'error',
+                    error: error.message,
+                });
+            }
+
+            if (data.affectedRows == 0) {
+                return reject({
+                    id: uuid.v1(),
+                    status: 'error',
+                    error: 'not found',
+                });
+            }
+
+            console.debug('user has been updated');
+            // console.debug(data);
+            return resolve({
+                status: 'success',
+                affectedRows: data.affectedRows,
+            });
+        });
     });
 };
 
-const remove = (req, res) => {
-    console.log('Not supported yet.' + req)
-    res.status(200).json({
-        info: 'Not supported yet'
+const remove = (id) => {
+    console.log('user.controller.option2.remove -> load');
+    return new Promise((resolve, reject) => {
+        let sql = 'DELETE FROM users WHERE id=$1';
+        console.debug(sql);
+        console.debug(id);
+        dbAccess.query(sql, [id], (error, data) => {
+            if (error) {
+                console.log('error:', error);
+                return reject({
+                    id: uuid.v1(),
+                    status: 'error',
+                    error: error.message,
+                });
+            }
+
+            if (data.affectedRows == 0) {
+                return reject({
+                    id: uuid.v1(),
+                    status: 'error',
+                    error: 'not found',
+                });
+            }
+
+            console.debug('user has been deleted');
+            // console.debug(data);
+            return resolve({
+                status: 'success',
+                affectedRows: data.affectedRows,
+            });
+        });
     });
 };
 

@@ -122,7 +122,7 @@ User.update = (id, user, result) => {
         console.error('user has been updated');
         result({
             id: uuid.v1(),
-            status: 'error',
+            status: 'success',
             updatedId: id,
             rows: data,
         });

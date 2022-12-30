@@ -26,11 +26,19 @@ const findById = async (req, res) => {
         console.log('user.controller.option2.findById -> start');
         const id = req.params.id;
         const result = await service.findById(id);
+
         res.status(200).json({
             data: result
         });
     } catch (error) {
         console.error(error);
+        if(error.code === 404) {
+            res.status(404).json({
+                data: 'not found'
+            });
+            return;
+        }
+
         res.status(500).send(error);
     }
 };
@@ -54,18 +62,33 @@ const create = async (req, res) => {
 const update = async (req, res) => {
     try {
         const id = req.params.id;
-        await service.update(id);
+        const user = req.body;
+        const result = await service.update(id, user);
+        res.status(200).json({
+            status: "success",
+            data: result
+        });
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).json({
+            status: "error",
+            error: error.message }
+        );
     }
 };
 
 const remove = async (req, res) => {
     try {
         const id = req.params.id;
-        await service.remove(id);
+        const result = await service.remove(id);
+        res.status(200).json({
+            status: "success",
+            data: result
+        });
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).json({
+            status: "error",
+            error: error.message }
+        );
     }
 };
 
