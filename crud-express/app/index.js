@@ -37,7 +37,7 @@ app.use('/api/option2/clients', require('./api-routes/routes.option2'));
 require('./api-routes/routes.option3') (app);
 
 // option #4 /api/nosql/clients
-app.use('/api/nosql/clients', require('./api-routes/routes.nosql').Router());
+app.use('/api/nosql/clients', require('./api-routes/routes.nosql'));
 
 
 module.exports = app;

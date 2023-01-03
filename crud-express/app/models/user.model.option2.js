@@ -41,9 +41,10 @@ const findById = (id) => {
         console.debug(sql);
         dbAccess.query(sql, [id])
             .then(data => {
-                if(data.rowCount === 0) {
+                if (data.rowCount === 0) {
                     return reject({
                         id: uuid.v1(),
+                        // add code
                         status: 'error',
                         error: 'not found',
                     });
@@ -87,10 +88,9 @@ const create = (user) => {
             }
 
             console.debug('user has been created');
-            // console.debug(data);
             return resolve({
                 status: 'success',
-                rowCount: data.rowCount,
+                affectedRows: data.rowCount,
             });
         });
     });
@@ -112,7 +112,7 @@ const update = (id, user) => {
                 });
             }
 
-            if (data.affectedRows == 0) {
+            if (data.rowCount == 0) {
                 return reject({
                     id: uuid.v1(),
                     status: 'error',
@@ -121,10 +121,9 @@ const update = (id, user) => {
             }
 
             console.debug('user has been updated');
-            // console.debug(data);
             return resolve({
                 status: 'success',
-                affectedRows: data.affectedRows,
+                affectedRows: data.rowCount,
             });
         });
     });
@@ -146,7 +145,7 @@ const remove = (id) => {
                 });
             }
 
-            if (data.affectedRows == 0) {
+            if (data.rowCount == 0) {
                 return reject({
                     id: uuid.v1(),
                     status: 'error',
@@ -155,10 +154,9 @@ const remove = (id) => {
             }
 
             console.debug('user has been deleted');
-            // console.debug(data);
             return resolve({
                 status: 'success',
-                affectedRows: data.affectedRows,
+                affectedRows: data.rowCount,
             });
         });
     });

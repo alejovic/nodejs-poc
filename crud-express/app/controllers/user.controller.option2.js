@@ -12,7 +12,7 @@ const findAll = async (req, res) => {
         console.log('user.controller.option2.findAll -> start');
         const result = await service.findAll();
         res.status(200).json({
-            data: result
+            payload: result
         });
         console.log('user.controller.option2.findAll -> end');
     } catch (error) {
@@ -28,13 +28,13 @@ const findById = async (req, res) => {
         const result = await service.findById(id);
 
         res.status(200).json({
-            data: result
+            payload: result
         });
     } catch (error) {
         console.error(error);
         if(error.code === 404) {
             res.status(404).json({
-                data: 'not found'
+                payload: 'not found'
             });
             return;
         }
@@ -47,9 +47,10 @@ const create = async (req, res) => {
     try {
         const user = req.body;
         const result = await service.create(user);
+        console.debug(result);
         res.status(200).json({
             status: "success",
-            data: result
+            message: "the user has been created."
         });
     } catch (error) {
         res.status(500).json({
@@ -64,9 +65,10 @@ const update = async (req, res) => {
         const id = req.params.id;
         const user = req.body;
         const result = await service.update(id, user);
+        console.debug(result);
         res.status(200).json({
             status: "success",
-            data: result
+            message: "the user has been updated."
         });
     } catch (error) {
         res.status(500).json({
@@ -80,9 +82,10 @@ const remove = async (req, res) => {
     try {
         const id = req.params.id;
         const result = await service.remove(id);
+        console.debug(result);
         res.status(200).json({
             status: "success",
-            data: result
+            message: "the user has been deleted."
         });
     } catch (error) {
         res.status(500).json({

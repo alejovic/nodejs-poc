@@ -1,5 +1,4 @@
 const dbAccess = require('./db');
-const uuid = require('uuid');
 
 //
 // best practice:
@@ -19,7 +18,6 @@ User.findAll = (result) => {
         if (error) {
             console.log('error: ', error);
             result({
-                id: uuid.v1(),
                 status: 'error',
                 error: error.message,
             });
@@ -27,42 +25,36 @@ User.findAll = (result) => {
         }
         console.debug('user.model.option3.findAll.rowCount ->' + data.rowCount)
         result({
-            id: uuid.v1(),
             status: 'sucesss',
-            rows: data,
+            rows: data.rows,
         });
     });
 };
 
 User.findById = (id, result) => {
     console.log('user.controller.option3.findById -> load');
-    let sql = `SELECT *
-               FROM users
-               WHERE id = '${id}'`;
-
+    let sql = `SELECT * FROM users WHERE id = ${id}`;
+    console.debug(sql);
     dbAccess.query(sql, (error, data) => {
         if (error) {
             console.log('error:', error);
             result({
-                id: uuid.v1(),
                 status: 'error',
                 error: error.message,
             });
             return;
         }
 
-        if (data.length) {
-            console.log('found user: ', data[0]);
+        if (data.rowCount > 0) {
+            console.debug('found user: ', data.rows);
             result({
-                id: uuid.v1(),
                 status: 'sucesss',
-                rows: data[0],
+                rows: data.rows,
             });
             return;
         }
 
         result({
-            id: uuid.v1(),
             status: 'error',
             error: 'not found',
         });
@@ -72,13 +64,13 @@ User.findById = (id, result) => {
 
 User.create = (user, result) => {
     console.log('user.controller.option3.create -> load');
-    let sql = 'INSERT into users SET ?';
-
-    dbAccess.query(sql, user, (error, data) => {
+    let sql = 'INSERT INTO users(name, email) VALUES ($1,$2)';
+    console.debug(sql);
+    console.debug(user);
+    dbAccess.query(sql, [user.name, user.email], (error, data) => {
         if (error) {
             console.log('error:', error);
             result({
-                id: uuid.v1(),
                 status: 'error',
                 error: error.message,
             });
@@ -87,32 +79,29 @@ User.create = (user, result) => {
 
         console.error('user has been created');
         result({
-            id: uuid.v1(),
             status: 'error',
-            insertId: data.insertId,
-            rows: data,
+            affectedRows: data.rowCount,
         });
     });
 };
 
 User.update = (id, user, result) => {
     console.log('user.controller.option3.update -> load');
-    let sql = 'UPDATE users SET name=?, email=? where id=?';
-
+    let sql = 'UPDATE users SET name=$1, email=$2 where id=$3';
+    console.debug(sql);
+    console.debug(id);
     dbAccess.query(sql, [user.name, user.email, id], (error, data) => {
         if (error) {
             console.log('error:', error);
             result({
-                id: uuid.v1(),
                 status: 'error',
                 error: error.message,
             });
             return;
         }
 
-        if (data.affectedRows == 0) {
+        if (data.rowCount === 0) {
             result({
-                id: uuid.v1(),
                 status: 'error',
                 error: 'not found',
             });
@@ -121,30 +110,29 @@ User.update = (id, user, result) => {
 
         console.error('user has been updated');
         result({
-            id: uuid.v1(),
             status: 'success',
             updatedId: id,
-            rows: data,
+            affectedRows: data.rowCount,
         });
     });
 }
 
 User.remove = (id, result) => {
     console.log('user.controller.option3.remove -> load');
-    let sql = 'DELETE FROM users WHERE id=?';
-
+    let sql = 'DELETE FROM users WHERE id=$1';
+    console.debug(sql);
+    console.debug(id);
     dbAccess.query(sql, id, (error, data) => {
         if (error) {
             console.log('error:', error);
             result({
-                id: uuid.v1(),
                 status: 'error',
                 error: error.message,
             });
             return;
         }
 
-        if (data.affectedRows == 0) {
+        if (data.rowCount === 0) {
             result({
                 id: uuid.v1(),
                 status: 'error',
@@ -155,10 +143,9 @@ User.remove = (id, result) => {
 
         console.error('user has been deleted');
         result({
-            id: uuid.v1(),
             status: 'error',
             deletedId: id,
-            rows: data,
+            affectedRows: data.rowCount,
         });
     })
 
