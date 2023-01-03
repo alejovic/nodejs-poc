@@ -1,3 +1,4 @@
+const logger = require('../../config/logger');
 const mysql = require('mysql');
 const { user, host, database, password, port} = require('../../config/dbConfig');
 
@@ -12,7 +13,7 @@ const client = mysql.createConnection({
 // connect to database
 client.connect(function (err) {
     if (err) throw err
-    console.log('You are now connected with mysql database...')
+    logger.debug('You are now connected with mysql database...')
 })
 
 module.exports = client;

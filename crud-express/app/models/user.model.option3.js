@@ -1,3 +1,4 @@
+const logger = require('../config/logger');
 const dbAccess = require('./db');
 
 //
@@ -11,19 +12,19 @@ const User = function (user) {
 }
 
 User.findAll = (result) => {
-    console.debug('user.model.option3.findAll -> load.');
+    logger.debug('user.model.option3.findAll -> load.');
     let sql = 'SELECT * FROM users ';
 
     dbAccess.query(sql, (error, data) => {
         if (error) {
-            console.log('error: ', error);
+            logger.debug('error: ', error);
             result({
                 status: 'error',
                 error: error.message,
             });
             return;
         }
-        console.debug('user.model.option3.findAll.rowCount ->' + data.rowCount)
+        logger.debug('user.model.option3.findAll.rowCount ->' + data.rowCount)
         result({
             status: 'sucesss',
             rows: data.rows,
@@ -32,12 +33,12 @@ User.findAll = (result) => {
 };
 
 User.findById = (id, result) => {
-    console.log('user.controller.option3.findById -> load');
+    logger.debug('user.controller.option3.findById -> load');
     let sql = `SELECT * FROM users WHERE id = ${id}`;
-    console.debug(sql);
+    logger.debug(sql);
     dbAccess.query(sql, (error, data) => {
         if (error) {
-            console.log('error:', error);
+            logger.debug('error:', error);
             result({
                 status: 'error',
                 error: error.message,
@@ -46,7 +47,7 @@ User.findById = (id, result) => {
         }
 
         if (data.rowCount > 0) {
-            console.debug('found user: ', data.rows);
+            logger.debug('found user: ', data.rows);
             result({
                 status: 'sucesss',
                 rows: data.rows,
@@ -63,13 +64,13 @@ User.findById = (id, result) => {
 }
 
 User.create = (user, result) => {
-    console.log('user.controller.option3.create -> load');
+    logger.debug('user.controller.option3.create -> load');
     let sql = 'INSERT INTO users(name, email) VALUES ($1,$2)';
-    console.debug(sql);
-    console.debug(user);
+    logger.debug(sql);
+    logger.debug(user);
     dbAccess.query(sql, [user.name, user.email], (error, data) => {
         if (error) {
-            console.log('error:', error);
+            logger.debug('error:', error);
             result({
                 status: 'error',
                 error: error.message,
@@ -77,7 +78,7 @@ User.create = (user, result) => {
             return;
         }
 
-        console.error('user has been created');
+        logger.error('user has been created');
         result({
             status: 'error',
             affectedRows: data.rowCount,
@@ -86,13 +87,13 @@ User.create = (user, result) => {
 };
 
 User.update = (id, user, result) => {
-    console.log('user.controller.option3.update -> load');
+    logger.debug('user.controller.option3.update -> load');
     let sql = 'UPDATE users SET name=$1, email=$2 where id=$3';
-    console.debug(sql);
-    console.debug(id);
+    logger.debug(sql);
+    logger.debug(id);
     dbAccess.query(sql, [user.name, user.email, id], (error, data) => {
         if (error) {
-            console.log('error:', error);
+            logger.debug('error:', error);
             result({
                 status: 'error',
                 error: error.message,
@@ -108,7 +109,7 @@ User.update = (id, user, result) => {
             return;
         }
 
-        console.error('user has been updated');
+        logger.error('user has been updated');
         result({
             status: 'success',
             updatedId: id,
@@ -118,13 +119,13 @@ User.update = (id, user, result) => {
 }
 
 User.remove = (id, result) => {
-    console.log('user.controller.option3.remove -> load');
+    logger.debug('user.controller.option3.remove -> load');
     let sql = 'DELETE FROM users WHERE id=$1';
-    console.debug(sql);
-    console.debug(id);
+    logger.debug(sql);
+    logger.debug(id);
     dbAccess.query(sql, id, (error, data) => {
         if (error) {
-            console.log('error:', error);
+            logger.debug('error:', error);
             result({
                 status: 'error',
                 error: error.message,
@@ -141,7 +142,7 @@ User.remove = (id, result) => {
             return;
         }
 
-        console.error('user has been deleted');
+        logger.error('user has been deleted');
         result({
             status: 'error',
             deletedId: id,

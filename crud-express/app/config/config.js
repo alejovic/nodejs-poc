@@ -6,7 +6,7 @@ const convict = require('convict');
 
 // Define schema
 // Note the env values are take from env.
-var config = convict({
+const config = convict({
   env: {
     doc: 'The application environment.',
     format: ['production', 'development', 'test'],
@@ -57,7 +57,7 @@ var config = convict({
       env: 'DB_PASSWORD'
     }
   },
-  nosql : {
+  nosql: {
     mongo_uri: {
       doc: 'Mongo URI',
       format: String,
@@ -68,9 +68,11 @@ var config = convict({
 });
 
 // Load environment dependent configuration
-var env = config.get('env');
+const env = config.get('env');
 config.loadFile(`./app/config/${env}.json`);
+
 
 // Perform validation
 config.validate({ allowed: 'strict' });
 module.exports = config;
+module.exports.env = env;

@@ -1,5 +1,4 @@
-//const mongoose = require("mongoose");
-
+const logger = require('../config/logger');
 const mongoose = require('./nosql');
 
 const Schema = mongoose.Schema;
@@ -19,27 +18,27 @@ const userSchema = new Schema({
 const userModel = mongoose.model("User", userSchema);
 
 userSchema.findAll = async() => {
-    console.log('user.mode.nosql.findAll -> start');
+    logger.debug('user.mode.nosql.findAll -> start');
     return userModel.find();
 };
 
 userSchema.findById = (id) => {
-    console.log('user.mode.nosql.findById -> start');
+    logger.debug('user.mode.nosql.findById -> start');
     return userModel.findById(id);
 }
 
 userSchema.create = (user) => {
-    console.log('user.mode.nosql.create -> start >>' + user);
+    logger.debug('user.mode.nosql.create -> start >>' + user);
     return userModel.create(user);
 }
 
 userSchema.update = (id, user) => {
-    console.log('user.mode.nosql.update -> start >>' + id);
+    logger.debug('user.mode.nosql.update -> start >>' + id);
     return userModel.findByIdAndUpdate(id, user);
 }
 
 userSchema.remove = (id) => {
-    console.log('user.mode.nosql.remove -> start >>' + id);
+    logger.debug('user.mode.nosql.remove -> start >>' + id);
     return userModel.delete(id);
 }
 

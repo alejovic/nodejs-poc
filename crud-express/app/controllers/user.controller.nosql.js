@@ -4,33 +4,33 @@
 // 2. Write Asynchronous Code - Use promises, async/await syntax. 
 // reference: https://scoutapm.com/blog/async-javascript
 //
-
+const logger = require('../config/logger');
 const service = require('../models/user.model.nosql');
 
 const findAll = async (req, res) => {
     try {
-        console.log('user.controller.nosql.findAll -> start');
+        logger.debug('user.controller.nosql.findAll -> start');
         const result = await service.findAll();
         res.status(200).json({
             data: result
         });
-        console.log('user.controller.nosql.findAll -> end');
+        logger.debug('user.controller.nosql.findAll -> end');
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         res.status(500).send(error);
     }
 };
 
 const findById = async (req, res) => {
     try {
-        console.log('user.controller.nosql.findById -> start');
+        logger.debug('user.controller.nosql.findById -> start');
         const id = req.params.id;
         const result = await service.findById(id);
         res.status(200).json({
             data: result
         });
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         res.status(500).send(error);
     }
 };

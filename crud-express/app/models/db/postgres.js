@@ -1,3 +1,4 @@
+const logger = require('../../config/logger');
 const {Client} = require('pg');
 
 const config = require('../../config/config.js');
@@ -12,7 +13,7 @@ const client = new Client({
 
 client.connect(function (err) {
     if (err) throw err
-    console.log('Connected to pgSQL -> ' + client.host + ':' + client.port);
+    logger.debug('Connected to pgSQL -> ' + client.host + ':' + client.port);
 })
 
 module.exports = client;

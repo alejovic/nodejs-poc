@@ -4,12 +4,12 @@
 // 2. It can be improved by using Asynchronous Code.
 // @see approach: user.controller.option2.js 
 //
-
+const logger = require('../config/logger');
 const service = require('../models/user.model.option3');
 
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
-    console.log('user.controller.option3.findAll -> start');
+    logger.debug('user.controller.option3.findAll -> start');
 
     service.findAll((data) => {
         if (data.status === 'error') {
@@ -27,7 +27,7 @@ exports.findAll = (req, res) => {
 
 // Find a single User with a id
 exports.findById = (req, res) => {
-    console.log('user.controller.option3.findById -> start');
+    logger.debug('user.controller.option3.findById -> start');
 
     const id = req.params.id;
     service.findById(id, (data) => {
@@ -46,7 +46,7 @@ exports.findById = (req, res) => {
 
 // Create and Save a new User
 exports.create = (req, res) => {
-    console.log('user.controller.option3.create -> start');
+    logger.debug('user.controller.option3.create -> start');
 
     const user = req.body;
     service.create(user, (data) => {
@@ -64,7 +64,7 @@ exports.create = (req, res) => {
 
 // Update a User identified by the id in the request
 exports.update = (req, res) => {
-    console.log('user.controller.option3.update -> start');
+    logger.debug('user.controller.option3.update -> start');
 
     const id = req.params.id;
     const user = req.body;
@@ -84,7 +84,7 @@ exports.update = (req, res) => {
 
 // Delete a User with the specified id in the request
 exports.remove = (req, res) => {
-    console.log('user.controller.option3.delete -> start');
+    logger.debug('user.controller.option3.delete -> start');
 
     const id = req.params.id;
     service.update(id, (data) => {

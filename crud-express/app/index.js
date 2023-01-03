@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-
 // create express app
 const app = express();
 
@@ -17,6 +16,8 @@ app.get('/', (req, res) => {
         message: 'Hello world crud postgres -> nodejs, express and pg!'});
 });
 
+// morgan -  log HTTP requests
+app.use(require('./config/logger/morgan-logger'));
 
 // option: simple projects - no best practice
 // const service = require('./services/clients');

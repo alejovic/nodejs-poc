@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const logger = require('../../config/logger');
 const config = require("../../config/config");
 
 const uri = config.get('nosql.mongo_uri');
@@ -12,9 +13,9 @@ mongoose.connect(
     },
     (err) => {
         if (err) {
-            console.log(err);
+            logger.error(err);
         } else {
-            console.log("Connected to MongoDB -> " + uri);
+            logger.debug("Connected to MongoDB -> " + uri);
         }
     }
 );
@@ -25,7 +26,7 @@ const db = mongoose.connection;
 
 // Bind connection to error event (to get notification of connection errors)
 db.on("error",
-    console.error.bind(console, "MongoDB connection error:"));
+    logger.error.bind(console, "MongoDB connection error:"));
 
 module.exports = mongoose;
 

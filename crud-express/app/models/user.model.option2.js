@@ -1,3 +1,4 @@
+const logger = require('../config/logger');
 const dbAccess = require('./db');
 const uuid = require('uuid');
 
@@ -9,10 +10,10 @@ const uuid = require('uuid');
 // 
 
 const findAll = () => {
-    console.debug('user.model.option2.findAll -> start.');
+    logger.debug('user.model.option2.findAll -> start.');
     return new Promise((resolve, reject) => {
         let sql = 'SELECT * FROM users ';
-        console.debug(sql);
+        logger.debug(sql);
         dbAccess.query(sql)
             .then(data => {
                 return resolve({
@@ -29,16 +30,16 @@ const findAll = () => {
                 });
             })
             .then(() => {
-                console.debug('user.model.option2.findById -> done.');
+                logger.debug('user.model.option2.findById -> done.');
             });
     });
 };
 
 const findById = (id) => {
-    console.debug('user.model.option2.findById -> start.');
+    logger.debug('user.model.option2.findById -> start.');
     return new Promise((resolve, reject) => {
         let sql = 'SELECT * FROM users WHERE id=$1';
-        console.debug(sql);
+        logger.debug(sql);
         dbAccess.query(sql, [id])
             .then(data => {
                 if (data.rowCount === 0) {
@@ -57,7 +58,7 @@ const findById = (id) => {
                 });
             })
             .catch(err => {
-                console.log(err.message);
+                logger.debug(err.message);
                 return reject({
                     id: uuid.v1(),
                     status: 'error',
@@ -66,20 +67,20 @@ const findById = (id) => {
             })
             // then after catch is works like a finally.
             .then(() => {
-                console.debug('user.model.option2.findById -> done.');
+                logger.debug('user.model.option2.findById -> done.');
             });
     });
 };
 
 const create = (user) => {
-    console.debug('user.model.option2.create -> start.');
+    logger.debug('user.model.option2.create -> start.');
     return new Promise((resolve, reject) => {
         let sql = 'INSERT INTO users(name, email) VALUES ($1,$2)';
-        console.debug(sql);
-        console.debug(user);
+        logger.debug(sql);
+        logger.debug(user);
         dbAccess.query(sql, [user.name, user.email], (error, data) => {
             if (error) {
-                console.log('error:', error);
+                logger.debug('error:', error);
                 return reject({
                     id: uuid.v1(),
                     status: 'error',
@@ -87,7 +88,7 @@ const create = (user) => {
                 });
             }
 
-            console.debug('user has been created');
+            logger.debug('user has been created');
             return resolve({
                 status: 'success',
                 affectedRows: data.rowCount,
@@ -97,14 +98,14 @@ const create = (user) => {
 };
 
 const update = (id, user) => {
-    console.log('user.controller.option2.update -> load');
+    logger.debug('user.controller.option2.update -> load');
     return new Promise((resolve, reject) => {
         let sql = 'UPDATE users SET name=$1, email=$2 where id=$3';
-        console.debug(sql);
-        console.debug(user);
+        logger.debug(sql);
+        logger.debug(user);
         dbAccess.query(sql, [user.name, user.email, id], (error, data) => {
             if (error) {
-                console.log('error:', error);
+                logger.debug('error:', error);
                 return reject({
                     id: uuid.v1(),
                     status: 'error',
@@ -120,7 +121,7 @@ const update = (id, user) => {
                 });
             }
 
-            console.debug('user has been updated');
+            logger.debug('user has been updated');
             return resolve({
                 status: 'success',
                 affectedRows: data.rowCount,
@@ -130,14 +131,14 @@ const update = (id, user) => {
 };
 
 const remove = (id) => {
-    console.log('user.controller.option2.remove -> load');
+    logger.debug('user.controller.option2.remove -> load');
     return new Promise((resolve, reject) => {
         let sql = 'DELETE FROM users WHERE id=$1';
-        console.debug(sql);
-        console.debug(id);
+        logger.debug(sql);
+        logger.debug(id);
         dbAccess.query(sql, [id], (error, data) => {
             if (error) {
-                console.log('error:', error);
+                logger.debug('error:', error);
                 return reject({
                     id: uuid.v1(),
                     status: 'error',
@@ -153,7 +154,7 @@ const remove = (id) => {
                 });
             }
 
-            console.debug('user has been deleted');
+            logger.debug('user has been deleted');
             return resolve({
                 status: 'success',
                 affectedRows: data.rowCount,

@@ -3,7 +3,7 @@
 // controller is being mixied with DAL responsabilities
 // @see approach: user.controller.option2.js
 //
-
+const logger = require('../config/logger');
 const {Client} = require('pg');
 
 const config = require('../config/config.js');
@@ -18,11 +18,11 @@ const client = new Client({
 
 client.connect(function (err) {
     if (err) throw err
-    console.log('bad practice --> You are now connected with postgres database...')
+    logger.debug('bad practice --> You are now connected with postgres database...')
 })
 
 exports.findAll = (req, res) => {
-    console.log('user.controller.option1.findAll -> start');
+    logger.debug('user.controller.option1.findAll -> start');
     let sql = 'SELECT * FROM users';
     client.query(sql,
         function (error, data) {
@@ -35,7 +35,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.findById = (req, res) => {
-    console.log('user.controller.option1.findById -> start');
+    logger.debug('user.controller.option1.findById -> start');
     let sql = 'SELECT * FROM users WHERE id=$1';
     client.query(sql,
         [req.params.id],
@@ -53,7 +53,7 @@ exports.findById = (req, res) => {
 };
 
 exports.create = (req, res) => {
-    console.log('user.controller.option1.create -> start');
+    logger.debug('user.controller.option1.create -> start');
     // Validate request
     if (!req.body.email) {
         return res.status(400).send({
@@ -64,12 +64,12 @@ exports.create = (req, res) => {
 
     const user = req.body;
     const params = [user.name, user.email];
-    console.log(params);
+    logger.debug(params);
     let sql = 'INSERT INTO users(name, email) VALUES ($1,$2)';
     client.query(sql, params,
         function (error, data) {
             if (error) throw error;
-            console.debug(data);
+            logger.debug(data);
             return res.send({
                 status: "success",
                 message: "the user has been created."
@@ -78,7 +78,7 @@ exports.create = (req, res) => {
 };
 
 exports.update = (req, res) => {
-    console.log('user.controller.option1.update -> start');
+    logger.debug('user.controller.option1.update -> start');
     // Validate Request
     if (!req.body.email) {
         return res.status(400).send({
@@ -92,7 +92,7 @@ exports.update = (req, res) => {
         [req.body.name, req.body.email, req.params.id],
         function (error, data) {
             if (error) throw error;
-            console.debug(data);
+            logger.debug(data);
             res.end(JSON.stringify({
                 status: "success",
                 message: "the user has been updated."
@@ -101,13 +101,13 @@ exports.update = (req, res) => {
 };
 
 exports.remove = (req, res) => {
-    console.log('user.controller.option1.remove -> start');
-    console.log(req.body);
+    logger.debug('user.controller.option1.remove -> start');
+    logger.debug(req.body);
     let sql = 'DELETE FROM users WHERE id=$1';
     client.query(sql,
         [req.body.id], function (error, data) {
             if (error) throw error;
-            console.debug(data);
+            logger.debug(data);
             res.end(JSON.stringify({
                 status: "success",
                 message: "the user has been deleted."

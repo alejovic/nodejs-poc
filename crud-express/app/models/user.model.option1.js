@@ -1,4 +1,4 @@
-
+const logger = require('../config/logger');
 const dbAccess = require('./db');
 
 // Make sure you don’t pass any web layer objects (i.e. req, res, headers, etc) into your services. 
@@ -29,30 +29,30 @@ const findAll = (req, res) => {
 
 const findById = (req, res) => {
     let sql = 'SELECT * FROM users WHERE id=' + req.params.id;
-    console.debug(sql);
+    logger.debug(sql);
 
-    console.log('Not supported yet.' + req)
+    logger.debug('Not supported yet.' + req)
     res.status(200).json({
         info: 'Not supported yet'
     });
 };
 
 const create = (req, res) => {
-    console.log('Not supported yet.' + req)
+    logger.debug('Not supported yet.' + req)
     res.status(201).json({
         info: 'Not supported yet'
     });
 };
 
 const update = (req, res) => {
-    console.log('Not supported yet.' + req)
+    logger.debug('Not supported yet.' + req)
     res.status(200).json({
         info: 'Not supported yet'
     });
 };
 
 const remove = (req, res) => {
-    console.log('Not supported yet.' + req)
+    logger.debug('Not supported yet.' + req)
     res.status(200).json({
         info: 'Not supported yet'
     });

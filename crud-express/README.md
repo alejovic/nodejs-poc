@@ -8,7 +8,7 @@
 5. docker + mongodb
 6. docker + solr
 
-## Frameworks
+## Frameworks and Libraries
 1. express
 2. winston, bunyan, morgan
 3. joi
@@ -154,4 +154,22 @@ module.exports = config;
 const config = require('./config.js');
 console.log(config.get('db.host')) // server1.dev.test
 
+```
+
+---
+
+## Loggers
+
+Winston
+One of the most popular logging library tools. This is my typical logger of choice. It is compact and offers everything you might need from a logger, including levels (sorting messages by importance), formatting (concerning structure and syntax of log entries), different transports (storage for logs), and so on. It is also highly configurable.
+
+Pino
+This one offers very similar functionality to Winston. It boasts very little overhead and provides transports as well as log processing. It also offers a pretty-pino module for formating logs during development using NDJSON (Newline Delimited JSON).
+
+Bunyan
+It is a simple and fast JSON logging library. It comes with a CLI tool for browsing and pretty-printing logs. It offers custom log rendering with serializers, and logger specialization with log.child. In addition, it streams for specifying log targets. 
+
+### install winston pino morgan bunyan
+```shell
+npm install winston pino morgan bunyan
 ```

@@ -1,5 +1,6 @@
 const app = require('./app');
 const config = require('./app/config/config.js');
+const logger = require('./app/config/logger');
 
 // no best practice
 // const dotenv = require('dotenv');
@@ -12,5 +13,5 @@ const port = config.get('port') || 5000;
 
 // listen for requests
 app.listen(port, () => {
-    console.log(`Server is listening on port at http://localhots:${port}`);
+    logger.info(`Server is listening on port at http://localhots:${port}`);
 });
