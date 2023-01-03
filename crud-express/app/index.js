@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 });
 
 // morgan -  log HTTP requests
-app.use(require('./config/logger/morgan-logger'));
+app.use(require('./config/logger/morgan'));
 
 // option: simple projects - no best practice
 // const service = require('./services/clients');

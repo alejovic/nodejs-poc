@@ -47,12 +47,13 @@ const create = async (req, res) => {
     try {
         const user = req.body;
         const result = await service.create(user);
-        logger.debug(result);
+        logger.debug(JSON.stringify(result));
         res.status(200).json({
             status: "success",
             message: "the user has been created."
         });
     } catch (error) {
+        logger.debug(JSON.stringify(error));
         res.status(500).json({
             status: "error",
             error: error.message }

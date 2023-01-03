@@ -1,14 +1,31 @@
+const config = require('../config.js');
 const morgan = require('morgan');
 const logger = require('.');
-const config = require("../config");
 
-module.exports.default = () => {
-    let level = config.env === 'development' ? 'dev' : 'prod';
-    logger.debug('morgan level -> ' + level)
-    return morgan('tiny');
-};
-
-module.exports.config = (level, options) => {
+function _config(level, options) {
     logger.debug('morgan level -> ' + level)
     return morgan(level, options);
 };
+
+const stream = {
+    // Use the http severity
+    write: (message) => logger.http(message),
+};
+
+const skip = () => {
+    const env = config.env || "development";
+    return env !== "development";
+};
+
+const httpLogger = _config(
+    // Define message format string (this is the default one).
+    // The message format is made from tokens, and each token is
+    // defined inside the Morgan library.
+    // You can create your custom token to show what do you want from a request.
+    ":remote-addr :method :url :status :res[content-length] - :response-time ms",
+    // Options: in this case, I overwrote the stream and the skip logic.
+    // See the methods above.
+    {stream, skip}
+);
+
+module.exports = httpLogger;

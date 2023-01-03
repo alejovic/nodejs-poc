@@ -12,6 +12,7 @@ const options = {
     console: {
         level: 'debug',
         stderrLevels: ['error'],
+        handleExceptions: true,
     },
 };
 

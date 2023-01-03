@@ -1,6 +1,7 @@
 const logger = require('../config/logger');
 const dbAccess = require('./db');
 const uuid = require('uuid');
+const validator = require('./validators/user.validator')
 
 //
 // best practice:
@@ -75,16 +76,35 @@ const findById = (id) => {
 const create = (user) => {
     logger.debug('user.model.option2.create -> start.');
     return new Promise((resolve, reject) => {
+        let isValid = true;
+        validator.validateUser(user, (result) => {
+            logger.debug('user.model.option2.validateUser ->.');
+            logger.debug(JSON.stringify(result));
+            if (result.status === 'error') {
+                console.log('pues es ture');
+                isValid = false;
+                reject({
+                    id: uuid.v1(),
+                    status: 'error',
+                    message: result.message.details[0].message,
+                });
+            }
+        });
+
+        if(!isValid){
+            return;
+        }
+
         let sql = 'INSERT INTO users(name, email) VALUES ($1,$2)';
         logger.debug(sql);
-        logger.debug(user);
+        logger.debug(JSON.stringify(user));
         dbAccess.query(sql, [user.name, user.email], (error, data) => {
             if (error) {
                 logger.debug('error:', error);
                 return reject({
                     id: uuid.v1(),
                     status: 'error',
-                    error: error.message,
+                    message: error.message,
                 });
             }
 
@@ -109,7 +129,7 @@ const update = (id, user) => {
                 return reject({
                     id: uuid.v1(),
                     status: 'error',
-                    error: error.message,
+                    message: error.message,
                 });
             }
 
@@ -117,7 +137,7 @@ const update = (id, user) => {
                 return reject({
                     id: uuid.v1(),
                     status: 'error',
-                    error: 'not found',
+                    message: 'not found',
                 });
             }
 
@@ -138,11 +158,11 @@ const remove = (id) => {
         logger.debug(id);
         dbAccess.query(sql, [id], (error, data) => {
             if (error) {
-                logger.debug('error:', error);
+                logger.debug('message:', error);
                 return reject({
                     id: uuid.v1(),
                     status: 'error',
-                    error: error.message,
+                    message: error.message,
                 });
             }
 
@@ -150,7 +170,7 @@ const remove = (id) => {
                 return reject({
                     id: uuid.v1(),
                     status: 'error',
-                    error: 'not found',
+                    message: 'not found',
                 });
             }
 
