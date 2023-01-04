@@ -3,21 +3,24 @@ const mongoose = require('./nosql');
 
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
-    name: String,
-    email: String,
-    image: String,
-    createdAt: {
-        type: Date,
-        default: Date.now,
+const userSchema = new Schema(
+    {
+        name: String,
+        email: String,
+        image: String,
+        createdAt: {
+            type: Date,
+            default: Date.now,
+        },
     },
-});
+    { timestamps: true }
+);
 
 //module.exports = mongoose.model("User", userSchema);
 
 const userModel = mongoose.model("User", userSchema);
 
-userSchema.findAll = async() => {
+userSchema.findAll = async () => {
     logger.debug('user.mode.nosql.findAll -> start');
     return userModel.find();
 };

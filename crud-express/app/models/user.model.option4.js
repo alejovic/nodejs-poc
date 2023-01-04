@@ -1,17 +1,16 @@
 const logger = require('../config/logger');
-const dbAccess = require('./db');
 const uuid = require('uuid');
-const validator = require('./validators/user.joi.validator')
+const validator = require('./validators/user.validator')
 
 //
 // best practice:
 // 1. Separation of contexts.
 // 2. Uses promises
 // 3. Use promises’ error handling support
-// 
+// 4. DI - Use dependency injection
 
-const findAll = () => {
-    logger.debug('user.model.option2.findAll -> start.');
+const findAll = (dbAccess) => {
+    logger.debug('user.model.option4.findAll -> start.');
     return new Promise((resolve, reject) => {
         let sql = 'SELECT * FROM users ';
         logger.debug(sql);
@@ -31,13 +30,13 @@ const findAll = () => {
                 });
             })
             .then(() => {
-                logger.debug('user.model.option2.findById -> done.');
+                logger.debug('user.model.option4.findById -> done.');
             });
     });
 };
 
-const findById = (id) => {
-    logger.debug('user.model.option2.findById -> start.');
+const findById = (dbAccess, id) => {
+    logger.debug('user.model.option4.findById -> start.');
     return new Promise((resolve, reject) => {
         let sql = 'SELECT * FROM users WHERE id=$1';
         logger.debug(sql);
@@ -68,50 +67,57 @@ const findById = (id) => {
             })
             // then after catch is works like a finally.
             .then(() => {
-                logger.debug('user.model.option2.findById -> done.');
+                logger.debug('user.model.option4.findById -> done.');
             });
     });
 };
 
-const create = (user) => {
-    logger.debug('user.model.option2.create -> start.');
+const create = (dbAccess, user) => {
+    logger.debug('user.model.option4.create -> start.');
     return new Promise((resolve, reject) => {
-        validator.validateUser(user)
-            .then(result => {
-                logger.debug('user.model.option2.validateUser -> ');
-                logger.debug(JSON.stringify(result));
-                let sql = 'INSERT INTO users(name, email) VALUES ($1,$2)';
+        let isValid = true;
+        validator.validateUser(user, (result) => {
+            logger.debug('user.model.option4.validateUser ->.');
+            logger.debug(JSON.stringify(result));
+            if (result.status === 'error') {
+                console.log('pues es ture');
+                isValid = false;
+                reject({
+                    id: uuid.v1(),
+                    status: 'error',
+                    message: result.message.details[0].message,
+                });
+            }
+        });
 
-                logger.debug(sql);
-                logger.debug(JSON.stringify(user));
-                dbAccess.query(sql, [user.name, user.email], (error, data) => {
-                    if (error) {
-                        logger.debug('error:', error);
-                        return reject({
-                            id: uuid.v1(),
-                            status: 'error',
-                            message: error.message,
-                        });
-                    }
+        if(!isValid){
+            return;
+        }
 
-                    logger.debug('user has been created');
-                    return resolve({
-                        status: 'success',
-                        affectedRows: data.rowCount,
-                    });
-                })
-            }).catch(error => {
-            return reject({
-                id: uuid.v1(),
-                status: 'error',
-                message: error.message.details[0].message,
+        let sql = 'INSERT INTO users(name, email) VALUES ($1,$2)';
+        logger.debug(sql);
+        logger.debug(JSON.stringify(user));
+        dbAccess.query(sql, [user.name, user.email], (error, data) => {
+            if (error) {
+                logger.debug('error:', error);
+                return reject({
+                    id: uuid.v1(),
+                    status: 'error',
+                    message: error.message,
+                });
+            }
+
+            logger.debug('user has been created');
+            return resolve({
+                status: 'success',
+                affectedRows: data.rowCount,
             });
         });
     });
 };
 
-const update = (id, user) => {
-    logger.debug('user.controller.option2.update -> load');
+const update = (dbAccess, id, user) => {
+    logger.debug('user.controller.option4.update -> load');
     return new Promise((resolve, reject) => {
         let sql = 'UPDATE users SET name=$1, email=$2 where id=$3';
         logger.debug(sql);
@@ -143,8 +149,8 @@ const update = (id, user) => {
     });
 };
 
-const remove = (id) => {
-    logger.debug('user.controller.option2.remove -> load');
+const remove = (dbAccess, id) => {
+    logger.debug('user.controller.option4.remove -> load');
     return new Promise((resolve, reject) => {
         let sql = 'DELETE FROM users WHERE id=$1';
         logger.debug(sql);

@@ -1,6 +1,6 @@
 const Joi = require('joi');
 
-const schemas = {
+const schemasJoi = {
     user: Joi.object().keys({
         name: Joi.string()
             .min(5)
@@ -19,4 +19,4 @@ const schemas = {
     // define other schemas below...
 };
 
-module.exports = schemas;
+module.exports = schemasJoi;
