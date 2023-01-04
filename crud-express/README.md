@@ -48,9 +48,15 @@ npm install --save body-parser
 ```
 
 ## for connecting to Postgresql
+### Database
 ```shell
 npm install --save pg
 ```
+### ORM
+#### Prisma
+#### Sequelize
+#### TypeORM
+
 
 ## UUID
 ```shell
@@ -58,6 +64,8 @@ npm install --save uuid
 ```
 
 ## for connecting to Mongo
+
+### ODM - mongoose
 ```shell
 npm install --save mongoose
 ```
@@ -169,7 +177,22 @@ This one offers very similar functionality to Winston. It boasts very little ove
 Bunyan
 It is a simple and fast JSON logging library. It comes with a CLI tool for browsing and pretty-printing logs. It offers custom log rendering with serializers, and logger specialization with log.child. In addition, it streams for specifying log targets. 
 
+Log HTTP requests in Node with Morgan
+Another best practice is to log your HTTP request in your Node.js application. One of the most used tools to accomplish this is Morgan, which gets the server logs and systematizes them to make them more readable.
+
 ### install winston pino morgan bunyan
 ```shell
 npm install winston pino morgan bunyan
+```
+
+---
+
+## Validations
+
+https://github.com/hapijs/joi/blob/v14.3.1/API.md
+
+
+### install joi
+```shell
+npm install joi
 ```

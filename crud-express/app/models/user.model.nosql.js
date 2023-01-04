@@ -1,22 +1,6 @@
 const logger = require('../config/logger');
 const mongoose = require('./nosql');
-
-const Schema = mongoose.Schema;
-
-const userSchema = new Schema(
-    {
-        name: String,
-        email: String,
-        image: String,
-        createdAt: {
-            type: Date,
-            default: Date.now,
-        },
-    },
-    { timestamps: true }
-);
-
-//module.exports = mongoose.model("User", userSchema);
+const userSchema = require("./user.model.nosql");
 
 const userModel = mongoose.model("User", userSchema);
 
@@ -25,24 +9,24 @@ userSchema.findAll = async () => {
     return userModel.find();
 };
 
-userSchema.findById = (id) => {
+userSchema.findById = async(id) => {
     logger.debug('user.mode.nosql.findById -> start');
     return userModel.findById(id);
 }
 
-userSchema.create = (user) => {
+userSchema.create = async(user) => {
     logger.debug('user.mode.nosql.create -> start >>' + user);
     return userModel.create(user);
 }
 
-userSchema.update = (id, user) => {
+userSchema.update = async(id, user) => {
     logger.debug('user.mode.nosql.update -> start >>' + id);
     return userModel.findByIdAndUpdate(id, user);
 }
 
-userSchema.remove = (id) => {
+userSchema.remove = async(id) => {
     logger.debug('user.mode.nosql.remove -> start >>' + id);
-    return userModel.delete(id);
+    return userModel.findByIdAndDelete(id);
 }
 
 module.exports = userSchema;
