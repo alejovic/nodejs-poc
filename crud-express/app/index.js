@@ -40,5 +40,7 @@ require('./api-routes/routes.option3') (app);
 // option #4 /api/nosql/clients
 app.use('/api/nosql/clients', require('./api-routes/routes.nosql'));
 
+// option #5 /api/sequelize/clients
+app.use('/api/sequelize/clients', require('./api-routes/routes.sequelize'));
 
 module.exports = app;

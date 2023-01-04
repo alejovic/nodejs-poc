@@ -5,7 +5,14 @@
     "port": 55432,
     "name": "nodejs",
     "user": "postgres",
-    "password": "postgres"
+    "password": "postgres",
+    "dialect":  "postgres",
+    "pool" : {
+      "max": 5,
+      "min": 0,
+      "acquire": 30000,
+      "idle": 10000
+    }
   },
   "nosql": {
     "mongo_uri": "mongodb://localhost:57017/nodejs"

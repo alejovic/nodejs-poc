@@ -7,64 +7,88 @@ const convict = require('convict');
 // Define schema
 // Note the env values are take from env.
 const config = convict({
-  env: {
-    doc: 'The application environment.',
-    format: ['production', 'development', 'test'],
-    default: 'development',
-    env: 'NODE_ENV'
-  },
-  ip: {
-    doc: 'The IP address to bind.',
-    format: '*',
-    default: '127.0.0.1',
-    env: 'IP_ADDRESS',
-  },
-  port: {
-    doc: 'The port to bind.',
-    format: 'port',
-    default: 8080,
-    env: 'PORT'
-  },
-  db: {
-    host: {
-      doc: 'Database host name/IP',
-      format: '*',
-      default: '127.0.0.1',
-      env: 'DB_HOST'
+    env: {
+        doc: 'The application environment.',
+        format: ['production', 'development', 'test'],
+        default: 'development',
+        env: 'NODE_ENV'
+    },
+    ip: {
+        doc: 'The IP address to bind.',
+        format: '*',
+        default: '127.0.0.1',
+        env: 'IP_ADDRESS',
     },
     port: {
-      doc: 'Database Port',
-      format: 'port',
-      default: 5432,
-      env: 'DB_PORT'
+        doc: 'The port to bind.',
+        format: 'port',
+        default: 8080,
+        env: 'PORT'
     },
-    name: {
-      doc: 'Database name',
-      format: String,
-      default: '',
-      env: 'DB_DATABASE'
+    db: {
+        host: {
+            doc: 'Database host name/IP',
+            format: '*',
+            default: '127.0.0.1',
+            env: 'DB_HOST'
+        },
+        port: {
+            doc: 'Database Port',
+            format: 'port',
+            default: 5432,
+            env: 'DB_PORT'
+        },
+        name: {
+            doc: 'Database name',
+            format: String,
+            default: '',
+            env: 'DB_DATABASE'
+        },
+        user: {
+            doc: 'Database User',
+            format: String,
+            default: '',
+            env: 'DB_USER'
+        },
+        password: {
+            doc: 'Database Password',
+            format: String,
+            default: '',
+            env: 'DB_PASSWORD'
+        },
+        dialect: {
+            doc: 'Database Dialect',
+            format: String,
+            default: 'postgres'
+        },
+        pool: {
+            min: {
+                format: Number,
+                default: 5
+            },
+            max: {
+                format: Number,
+                default: 0
+            },
+            acquire: {
+                format: Number,
+                default: 30000
+            },
+            idle: {
+                format: Number,
+                default: 30000
+            }
+        },
+
     },
-    user: {
-      doc: 'Database User',
-      format: String,
-      default: '',
-      env: 'DB_USER'
-    },
-    password: {
-      doc: 'Database Password',
-      format: String,
-      default: '',
-      env: 'DB_PASSWORD'
+    nosql: {
+        mongo_uri: {
+            doc: 'Mongo URI',
+            format: String,
+            default: '',
+            env: 'MONGODB_URI'
+        }
     }
-  },
-  nosql: {
-    mongo_uri: {
-      doc: 'Mongo URI',
-      format: String,
-      default: '',
-      env: 'MONGODB_URI'
-    }
-  }
 });
 
 // Load environment dependent configuration
@@ -73,6 +97,6 @@ config.loadFile(`./app/config/${env}.json`);
 
 
 // Perform validation
-config.validate({ allowed: 'strict' });
+config.validate({allowed: 'strict'});
 module.exports = config;
 module.exports.env = env;

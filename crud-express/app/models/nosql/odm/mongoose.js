@@ -22,7 +22,7 @@ mongoose.connect(
 
 
 // Get the default connection
-const db = mongoose.connection;
+const db = mongoose.default.connection;
 
 // Bind connection to error event (to get notification of connection errors)
 db.on("error",
