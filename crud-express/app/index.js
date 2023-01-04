@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 // create express app
 const app = express();
@@ -9,6 +10,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // parse application/json
 app.use(bodyParser.json());
+
+// cors
+const corsOptions = {
+    origin: "http://localhost:8081"
+};
+app.use(cors(corsOptions));
 
 // define a simple route
 app.get('/', (req, res) => {
