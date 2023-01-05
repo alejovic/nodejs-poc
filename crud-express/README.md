@@ -16,6 +16,7 @@
 3. joi
 4. mocha, jset, jasmine
 5. passport
+6. swagger
 
 ## Project Structure
 
@@ -25,7 +26,8 @@ src
    ├──.env           dotenv configuration
    ├──app
          ├── index.js                   app entry point
-         ├── /api-routes                api routes
+         ├── /api-docs                  api documnentation (swagger/openApi)
+         ├── /api-routes                api routes         
          ├── /config                    config settings, env variables
                ├──config.js             convict configuration
                ├──development.json      development configuration values         
@@ -38,6 +40,12 @@ src
          └── /test                      test suites
 
 
+```
+
+## Nodemon
+monitor for any changes in your source and automatically restart your server. Perfect for development.
+```shell
+npm install --save-dev nodemon
 ```
 
 ## framework that provides a robust set of features for web and mobile applications.
@@ -103,7 +111,7 @@ npm install --save pg
 *pg for PostgreSQL and pg-hstore for converting data into the PostgreSQL hstore format.
 
 ```shell
-npm install --save pg pg-hstore 
+npm install --save pg pg-hstore
 npm install --save sequelize
 ```
 
@@ -240,7 +248,7 @@ Another best practice is to log your HTTP request in your Node.js application. O
 ### install winston pino morgan bunyan
 
 ```shell
-npm install winston pino morgan bunyan
+npm install --save winston pino morgan bunyan
 ```
 
 ---
@@ -252,5 +260,12 @@ https://github.com/hapijs/joi/blob/v14.3.1/API.md
 ### install joi
 
 ```shell
-npm install joi
+npm install --save joi
+```
+---
+
+## Swagger
+
+```shell
+npm install --save swagger-jsdoc swagger-ui-express
 ```
