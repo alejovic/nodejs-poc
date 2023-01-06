@@ -30,10 +30,42 @@ const swaggerFolder = require('./api-doc');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFolder));
 
 
+// This is the basic express session({..}) initialization.
+const session = require('express-session');
+const memoryStore = new session.MemoryStore();
+app.use(session({
+    secret: 'crud-express-poc',
+    cookie: {maxAge: 3000},
+    resave: false,
+    saveUninitialized: false,
+    store: memoryStore
+}))
+
+// passport
+const passport = require('passport');
+// strategy
+require('./config/auth/strategies/local');
+
+const authRoute = require('./config/auth')
+app.use('/auth', authRoute);
+
+// init passport on every route call.
+app.use(passport.initialize());
+
+// allow passport to use "express-session".
+app.use(passport.session());
+
+
 // define a simple route
 app.get('/', (req, res) => {
-    res.json({
-        message: 'Hello world crud postgres -> nodejs, express and pg!'
+    if (req.user) {
+        console.log(req.user);
+        res.status(200).send({
+            message: 'Hello world crud postgres -> nodejs, express and pg!'
+        })
+    }
+    res.status(403).send({
+        message: 'Not authenticated!'
     });
 });
 

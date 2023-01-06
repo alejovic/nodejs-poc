@@ -64,3 +64,9 @@ $ curl -X POST http://localhost:18080/api/nosql/users \
   -H "Content-Type: application/json" \
   -d '{"name": "alejandro","email": "alejovic@gmail.com","image": "URL_1"}'
 
+
+
+ ## passport test 
+$ curl -X POST http://localhost:18080/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "alejovic","password": "P@ssport"}'
