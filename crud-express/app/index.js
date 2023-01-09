@@ -68,23 +68,28 @@ app.use(passport.session(undefined));
 
 
 // auth route option #2
-require('./api-routes/auth/auth.router.option2')(app);
+const authentication = require('./api-routes/auth/auth.router.option2');
+const isAuth = authentication.isAuth;
+authentication.authenticate(app);
 
-// define a simple route
-app.get('/',
+// define a protected route
+app.get('/protected-route', isAuth,
     (req, res) => {
         logger.debug(`the user isAuthenticated -> ${req.isAuthenticated()}`);
-        if (req.user) {
-            return res.status(200).send({
-                message: 'Hello world crud postgres -> nodejs, express and pg!'
-            })
-        }
-        return res.status(403).send({
-            message: 'Not authenticated!'
-        });
+        return res.status(200).send({
+            message: 'Hello world crud postgres -> nodejs, express and pg!'
+        })
     }
 );
 
+// define a simple route
+app.get('/simple',
+    (req, res) => {
+        return res.status(200).send({
+            message: 'Hello world crud postgres -> nodejs, express and pg!'
+        })
+    }
+);
 
 
 // option: simple projects - no best practice

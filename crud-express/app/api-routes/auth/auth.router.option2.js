@@ -2,14 +2,34 @@ const passport = require('passport');
 const logger = require('../../config/logger');
 const router = require('express').Router();
 
-module.exports = function (app) {
-
-    app.use(authenticate,
-        (req, res, next) => {
-        // console.log(req.session);
-        // console.log(req.user);
+exports.isAuth = (req, res, next) => {
+    if (req.isAuthenticated()) {
         next();
-    });
+    } else {
+        res.status(401).send({
+            message: 'Not authenticated to check this resource!'
+        })
+    };
+};
+
+function isAdmin(req, res, next) {
+    if (req.isAuthenticated() && req.user.admin) {
+        next();
+    } else {
+        res.status(401).send({
+            message: 'Need to be an admin user to check this resource!'
+        })
+    };
+}
+
+exports.authenticate = function (app) {
+
+    // app.use(authenticate,
+    //     (req, res, next) => {
+    //         // console.log(req.session);
+    //         // console.log(req.user);
+    //         next();
+    //     });
 
     router.post('/login', authenticate,
         (req, res, next) => {
@@ -25,6 +45,15 @@ module.exports = function (app) {
                 message: 'Not authenticated!'
             });
         });
+
+    router.post('/protected-route', authenticate, isAdmin,
+        (req, res) => {
+            logger.debug(`the user isAuthenticated -> ${req.isAuthenticated()}`);
+            return res.status(200).send({
+                message: 'Hello world crud postgres -> nodejs, express and pg!'
+            })
+        }
+    );
 
     app.use('/auth/v2', router);
 
