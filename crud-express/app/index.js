@@ -1,22 +1,22 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+const logger = require("./config/logger");
 const fs = require('fs');
 
 // create express app
 const app = express();
 
+const bodyParser = require('body-parser');
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: true}));
-
 // parse application/json
 app.use(bodyParser.json());
 
 // cors
-const corsOptions = {
-    origin: "http://localhost:8081"
-};
-app.use(cors(corsOptions));
+// const cors = require('cors');
+// const corsOptions = {
+//     origin: "http://localhost:8081"
+// };
+// app.use(cors(corsOptions));
 
 //swagger
 const swaggerUi = require('swagger-ui-express');
@@ -29,45 +29,57 @@ app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {customCss
 const swaggerFolder = require('./api-doc');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFolder));
 
-
 // This is the basic express session({..}) initialization.
 const session = require('express-session');
-const memoryStore = new session.MemoryStore();
+const sessionStore = new session.MemoryStore();
 app.use(session({
     secret: 'crud-express-poc',
-    cookie: {maxAge: 3000},
     resave: false,
-    saveUninitialized: false,
-    store: memoryStore
+    saveUninitialized: true,
+    store: sessionStore,
+    cookie: {
+        maxAge: 1000 * 60 * 5,
+        secure: true
+    },
 }))
+
 
 // passport
 const passport = require('passport');
 // strategy
 require('./config/auth/strategies/local');
 
-const authRoute = require('./config/auth')
-app.use('/auth', authRoute);
-
 // init passport on every route call.
-app.use(passport.initialize());
-
+app.use(passport.initialize(undefined));
 // allow passport to use "express-session".
-app.use(passport.session());
+app.use(passport.session(undefined));
 
+// auth route option #1
+app.use('/auth', require('./api-routes/auth/auth.router.option1'));
+app.use(passport.authenticate('custom-login'),
+    (req, res, next) => {
+        console.log(req.session);
+        console.log(req.user);
+        next();
+    });
+
+// auth route option #2
+// require('./api-routes/auth/auth.router.option2')(app);
 
 // define a simple route
-app.get('/', (req, res) => {
-    if (req.user) {
-        console.log(req.user);
-        res.status(200).send({
-            message: 'Hello world crud postgres -> nodejs, express and pg!'
-        })
+app.get('/',
+    (req, res) => {
+        logger.debug(`the user isAuthenticated -> ${req.isAuthenticated()}`);
+        if (req.user) {
+            return res.status(200).send({
+                message: 'Hello world crud postgres -> nodejs, express and pg!'
+            })
+        }
+        return res.status(403).send({
+            message: 'Not authenticated!'
+        });
     }
-    res.status(403).send({
-        message: 'Not authenticated!'
-    });
-});
+);
 
 // morgan -  log HTTP requests
 app.use(require('./config/logger/morgan'));

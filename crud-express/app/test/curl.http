@@ -2,7 +2,8 @@
 
 ## default
 # findAll
-$ curl http://localhost:18080/api/users
+# $ curl http://localhost:18080/api/users
+GET http://localhost:18080/api/users
 
 # findById
 $ curl http://localhost:18080/api/users/1

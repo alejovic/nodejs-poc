@@ -2,6 +2,43 @@ const LocalStrategy = require('passport-local');
 const passport = require('passport');
 const logger = require('../../logger');
 
+// 1. If the user not found in DB,
+//     done (null, false)
+// 2. If the user found in DB, but password does not match,
+//     done (null, false)
+// 3. If user found in DB and password match,
+//     done (null, {authenticated_user})
+
+// callback
+const authenticateUser = async (username, password, done) => {
+    try {
+        const result = await dummyAuthentication(username, password);
+        logger.debug('[LocalStrategy Authentication]: ' + JSON.stringify(result));
+        if (result.status === 'success') {
+            done(null, result.user);
+            return;
+        }
+        done(null, false, result);
+
+    } catch (err) {
+        done(null, false, {
+            status: 'error',
+            message: err,
+        });
+    } finally {
+        logger.debug('[LocalStrategy Authentication]: Done.');
+    }
+};
+
+const strategy = new LocalStrategy({
+        usernameField: 'username',
+        passwordField: 'password',
+    },
+    authenticateUser
+);
+
+passport.use('custom-login', strategy);
+
 // WHAT DOES SERIALIZE USER MEAN?
 // 1. "express-session" creates a "req.session" object, when it is invoked via app.use(session({..}))
 // 2. "passport" then adds an additional object "req.session.passport" to this "req.session".
@@ -31,41 +68,15 @@ passport.serializeUser((user, done) => {
 // app.get("/dashboard", (req, res) => {
 //     res.render("dashboard.ejs", {name: req.user.name})
 // })
-passport.deserializeUser((user, done) => {
+passport.deserializeUser((username, done) => {
     logger.debug('[LocalStrategy Authentication]: deserializeUser -> ' + JSON.stringify(user));
-    done(null, user.username);
+    // find user by username
+    let user = {
+        username: username
+    }
+    done(null, user);
 })
 
-// 1. If the user not found in DB,
-//     done (null, false)
-// 2. If the user found in DB, but password does not match,
-//     done (null, false)
-// 3. If user found in DB and password match,
-//     done (null, {authenticated_user})
-
-passport.use(new LocalStrategy({
-        usernameField: 'username',
-        passwordField: 'password',
-    },
-    async (username, password, done) => {
-        try {
-            const result = await dummyAuthentication(username, password);
-            logger.debug('[LocalStrategy Authentication]: ' + JSON.stringify(result));
-            if (result.status === 'success') {
-                done(null, result.user);
-                return;
-            }
-            done(null, false, result);
-
-            logger.debug('[LocalStrategy Authentication]: Done.');
-        } catch (err) {
-            done(null, false, {
-                status: 'error',
-                message: err,
-            });
-        }
-    }
-));
 
 function dummyAuthentication(username, password) {
     return new Promise((resolve, reject) => {
