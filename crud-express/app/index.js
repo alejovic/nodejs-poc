@@ -18,6 +18,9 @@ app.use(bodyParser.json());
 // };
 // app.use(cors(corsOptions));
 
+// morgan -  log HTTP requests
+app.use(require('./config/logger/morgan'));
+
 //swagger
 const swaggerUi = require('swagger-ui-express');
 
@@ -55,16 +58,17 @@ app.use(passport.initialize(undefined));
 app.use(passport.session(undefined));
 
 // auth route option #1
-app.use('/auth', require('./api-routes/auth/auth.router.option1'));
-app.use(passport.authenticate('custom-login'),
-    (req, res, next) => {
-        console.log(req.session);
-        console.log(req.user);
-        next();
-    });
+// app.use(passport.authenticate('custom-login'),
+//     (req, res, next) => {
+//         console.log(req.session);
+//         console.log(req.user);
+//         next();
+//     });
+// app.use('/auth/v1', require('./api-routes/auth/auth.router.option1.js'));
+
 
 // auth route option #2
-// require('./api-routes/auth/auth.router.option2')(app);
+require('./api-routes/auth/auth.router.option2')(app);
 
 // define a simple route
 app.get('/',
@@ -81,8 +85,7 @@ app.get('/',
     }
 );
 
-// morgan -  log HTTP requests
-app.use(require('./config/logger/morgan'));
+
 
 // option: simple projects - no best practice
 // const service = require('./services/users');
